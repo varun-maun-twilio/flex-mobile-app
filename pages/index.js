@@ -85,7 +85,7 @@ async function  loginUser(){
         <input className="p-5 w-full border-solid border-2 border-slate-400 rounded" type="email" value={agentEmailId} onChange={(e)=>setAgentEmailId(e.target.value)} placeholder="Enter Email Id"  />
         </div>
 
-      <button className="h-20 w-full block align-middle mx-auto shadow bg-slate-100  focus:shadow-outline focus:outline-none text-black text-l py-3 px-10 font-bold"
+      <button className="h-20 w-full block align-middle mx-auto shadow bg-rose-600  focus:shadow-outline focus:outline-none text-white text-l py-3 px-10 font-bold"
       onClick={()=>{
         loginUser();
       }}

@@ -16,7 +16,7 @@ export default function Account() {
 
   return (
 
-    <div className="flex flex-col min-h-screen ">
+    <div className="flex flex-col min-h-screen " style={ {maxHeight: "-webkit-fill-available"}}>
 
 
       <header className="h-1/2 flex text-center mx-auto items-center justify-center">
@@ -27,14 +27,7 @@ export default function Account() {
 
 
       <div className="h-3/5 overflow-y-auto scroll-smooth">
-        <ul role="list" className="h-3/5 ">
-          <li>
-
-          <div class="form-check form-switch">
-    <input class="form-check-input appearance-none w-9 -ml-10 rounded-full float-left h-5 align-top bg-white bg-no-repeat bg-contain bg-gray-300 focus:outline-none cursor-pointer shadow-sm" type="checkbox" role="switch" id="flexSwitchCheckDefault" />
-    <label class="form-check-label inline-block text-gray-800" for="flexSwitchCheckDefault">Enable Notifications</label>
-  </div>
-          </li>
+        <ul role="list" className="h-3/5 ">          
           <li >
             <a className="block py-4 px-4 border-y-[1px] border-slate-300" onClick={signOut}>
               <div className="flex items-center space-x-4">
