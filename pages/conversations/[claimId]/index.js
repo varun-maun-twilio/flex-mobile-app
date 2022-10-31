@@ -99,7 +99,7 @@ function sendMessage(){
     
      
 
-    <div className="flex flex-col min-h-screen " style={ {maxHeight: "-webkit-fill-available"}}>
+    <div className="flex flex-col min-h-full " style={ {maxHeight: "-webkit-fill-available"}}>
 
 
 

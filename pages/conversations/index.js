@@ -30,7 +30,7 @@ async function  loadClaims(){
     
      
 
-    <div className="flex flex-col min-h-screen " style={ {maxHeight: "-webkit-fill-available"}}>
+    <div className="flex flex-col min-h-full " style={ {maxHeight: "-webkit-fill-available"}}>
 
 
       <div class="animate-pulse duration-300 flex space-x-4 h-4 justify-end">

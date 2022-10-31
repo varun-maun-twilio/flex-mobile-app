@@ -16,7 +16,7 @@ export default function Account() {
 
   return (
 
-    <div className="flex flex-col min-h-screen " style={ {maxHeight: "-webkit-fill-available"}}>
+    <div className="flex flex-col min-h-full " style={ {maxHeight: "-webkit-fill-available"}}>
 
 
       <header className="h-1/2 flex text-center mx-auto items-center justify-center">
