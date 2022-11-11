@@ -20,7 +20,7 @@ const { data: claimList, error } = useSWR('loadClaims', loadClaims, {refreshInte
 async function  loadClaims(){
     setShowLoading(true);
   const {workerSid}  = await BrowserStateUtil.fetchUserDetails();
-  const {conversationList=[]} = await MiddlewareUtil.fetchClaims({workerSid});
+  const {conversationList=[]} = await MiddlewareUtil.fetchClaims(workerSid);
   setShowLoading(false);
   return conversationList;
 }
