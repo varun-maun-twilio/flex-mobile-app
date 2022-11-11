@@ -36,7 +36,8 @@ useEffect(()=>{
   //Do nothing
 },[messageList,conversation])
 
-function closeChatWindow(){
+async function closeChatWindow(){
+  await MiddlewareUtil.endTask(claimId);
   router.push('/conversations')
 }
 
