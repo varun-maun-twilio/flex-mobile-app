@@ -82,6 +82,14 @@ type:s.type
 }
 
 
+const amITheAuthor = (author) => {
+  const encodedIdentity = encodeURIComponent(userId).replace(/\./g, '%2E').replace(/\%/g,"_");
+  if(author==userId || author==encodedIdentity){
+    return true;
+  }
+
+}
+
 const scrollToBottom = () => {
   messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
 }
@@ -123,8 +131,8 @@ function sendMessage(){
             {messageList.map(m=>(
             <li key={m.sid} className={"flex flex-col my-4 "}>
                 
-                <div className={"inline-flex relative px-4 py-2 text-gray-700 rounded shadow "+((userId==m.author)?" self-end bg-sky-100":" self-start bg-neutral-100 ")}>{m.body}</div>           
-                <div className={"mt-1 text-xs "+((userId==m.author)?"self-end":"self-start")}>{moment(m.dateCreated).format("MM/DD/YYYY, h:mm:ss a")}</div>       
+                <div className={"inline-flex relative px-4 py-2 text-gray-700 rounded shadow "+((amITheAuthor(m.author))?" self-end bg-sky-100":" self-start bg-neutral-100 ")}>{m.body}</div>           
+                <div className={"mt-1 text-xs "+((amITheAuthor(m.author))?"self-end":"self-start")}>{moment(m.dateCreated).format("MM/DD/YYYY, h:mm:ss a")}</div>       
                 
                 
             </li>
