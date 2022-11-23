@@ -1,8 +1,8 @@
 import Head from 'next/head'
-
+import { SessionProvider } from "next-auth/react"
 import '../styles/globals.css'
 
-function MyApp({ Component, pageProps }) {
+function MyApp({ Component, pageProps: { session, ...pageProps }, }) {
   return (
 
     <div className={"container mx-0 flex flex-col h-full v-full"} style={ {maxHeight: "-webkit-fill-available",maxWidth:"100vw"}}>
@@ -10,8 +10,9 @@ function MyApp({ Component, pageProps }) {
         <title>Flex Mobile App</title>
 
       </Head>
+      <SessionProvider session={session} basePath="/flex-mobile-app/api/auth" >
       <Component {...pageProps} />
-
+      </SessionProvider>
     </div>
 
   )

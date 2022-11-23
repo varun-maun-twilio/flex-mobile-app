@@ -5,18 +5,22 @@ import TwilioUtil from "../util/twilioUtil";
 import Image from 'next/image'
 import { useRouter } from 'next/router'
 import logoImage from '../public/static/images/flex-logo.png'
+import { useSession, signIn, signOut } from "next-auth/react"
+
+
 export default function Home() {
 
   const router = useRouter();
- 
+  const { data: session } = useSession();
+  
 const [showLoading,setShowLoading] = useState(false);  
 const [showLoginForm,setShowLoginForm] = useState(true);
 const [agentEmailId,setAgentEmailId] = useState("");
 
 
 useEffect(()=>{
-  
-},[])
+  console.error({session});
+},[session])
 
 
 /*
@@ -47,6 +51,8 @@ async function  loginUser(){
 
   setShowLoading(false);
 }
+
+
 
 
   return (
@@ -87,7 +93,7 @@ async function  loginUser(){
 
       <button className="h-20 w-full block align-middle mx-auto shadow bg-rose-600  focus:shadow-outline focus:outline-none text-white text-l py-3 px-10 font-bold"
       onClick={()=>{
-        loginUser();
+        signIn();
       }}
       >
         Sign in
