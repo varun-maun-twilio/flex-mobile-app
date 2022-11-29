@@ -6,6 +6,11 @@ import Image from 'next/image'
 import { useRouter } from 'next/router'
 import logoImage from '../public/static/images/flex-logo.png'
 import { useSession, signIn, signOut } from "next-auth/react"
+import * as firebase from "firebase/app";
+import "firebase/messaging";
+import { firebaseCloudMessaging } from "../util/firebase";
+import { getMessaging, onMessage  } from "firebase/messaging";
+import {  toast } from "react-toastify";
 
 
 export default function Home() {
@@ -14,42 +19,98 @@ export default function Home() {
   const { data: session } = useSession();
   
 const [showLoading,setShowLoading] = useState(false);  
-const [showLoginForm,setShowLoginForm] = useState(true);
-const [agentEmailId,setAgentEmailId] = useState("");
+
 
 
 useEffect(()=>{
-  console.error({session});
-},[session])
+  
+
+  if(session?.user?.email){
 
 
-/*
 
-async function checkIfUserLoggedIn(){
-  const loggedInUser = await BrowserStateUtil.fetchUserDetails();
-  console.error({loggedInUser});
-  if(loggedInUser==null){
-    setShowLoading(false);
-    setShowLoginForm(true);
-  }
-
+loginUser();
 }
 
-*/
+},[session?.user?.email])
 
+
+
+
+// Get the push notification message and triggers a toast to show it
+function getMessage() {
+  const messaging = getMessaging();
+  onMessage(messaging, (payload) => {
+
+    console.error({'index on message:':payload})
+    const {title,body} = payload?.notification;
+  
+
+  toast(
+    <div onClick={() => handleClickPushNotification(payload?.data?.url)}>
+      <h5>{title}</h5>
+      <h6>{body}</h6>
+    </div>,
+    {
+      closeOnClick: true,
+    }
+  );
+
+ 
+
+  
+  });
+}
+
+ // Handles the click function on the toast showing push notification
+ const handleClickPushNotification = (url) => {
+  router.push(url);
+};
+
+
+
+
+  // Calls the getMessage() function if the token is there
+  async function setToken() {
+    try {
+      const token = await firebaseCloudMessaging.init();
+      if (token) {
+        console.error("token", token);
+        getMessage();
+        await TwilioUtil.updateWorkerToken(token);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
 async function  loginUser(){
   setShowLoading(true);
-  const userDetails = await TwilioUtil.fetchWorkerDetails(agentEmailId);
-  console.error({userDetails});
+  await BrowserStateUtil.setAzureAccessToken(session.accessToken);
+
+
+  
+
+  // Event listener that listens for the push notification event in the background
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      console.error("event for the service worker in index", event);
+    });
+  }
+
+
+
+ 
+  const userDetails = await TwilioUtil.fetchWorkerDetails();
+  await setToken();
   await BrowserStateUtil.setUserDetails(userDetails);
 
   window.conversationClient = await TwilioUtil.getConversationClient(userDetails.token);
-
+  setShowLoading(false);
   router.push('/conversations')
 
-  setShowLoading(false);
+
 }
 
 
@@ -87,14 +148,13 @@ async function  loginUser(){
 
     
     <div className="">
-      <div className="py-5 px-5">
-        <input className="p-5 w-full border-solid border-2 border-slate-400 rounded" type="email" value={agentEmailId} onChange={(e)=>setAgentEmailId(e.target.value)} placeholder="Enter Email Id"  />
-        </div>
-
-      <button className="h-20 w-full block align-middle mx-auto shadow bg-rose-600  focus:shadow-outline focus:outline-none text-white text-l py-3 px-10 font-bold"
+    
+      <button className="h-20 w-full block align-middle mx-auto shadow bg-rose-600  focus:shadow-outline focus:outline-none disabled:opacity-25 text-white text-l py-3 px-10 font-bold"
       onClick={()=>{
         signIn();
       }}
+
+      disabled={session?.user?.email!=undefined}
       >
         Sign in
       </button>

@@ -19,10 +19,9 @@ const { data: claimList, error } = useSWR('loadClaims', loadClaims, {refreshInte
 
 async function  loadClaims(){
     setShowLoading(true);
-  const {workerSid}  = await BrowserStateUtil.fetchUserDetails();
-  const {conversationList=[]} = await MiddlewareUtil.fetchClaims(workerSid);
+  const {claimsConversations=[]} = await MiddlewareUtil.fetchClaims();
   setShowLoading(false);
-  return conversationList;
+  return claimsConversations;
 }
 
 
@@ -33,10 +32,10 @@ async function  loadClaims(){
     <div className="flex flex-col min-h-full " style={ {maxHeight: "-webkit-fill-available"}}>
 
 
-      <div class="animate-pulse duration-300 flex space-x-4 h-4 justify-end">
+      <div className="animate-pulse duration-300 flex space-x-4 h-4 justify-end">
       {
       showLoading && 
-      <span class="animate-pulse inline-flex h-4 w-4 rounded-full  bg-rose-600 opacity-100"></span>
+      <span className="animate-pulse inline-flex h-4 w-4 rounded-full  bg-rose-600 opacity-100"></span>
       }
       </div>
     
@@ -60,12 +59,12 @@ async function  loadClaims(){
 <div className="h-3/5 overflow-y-auto scroll-smooth">
     <ul role="list" className="h-3/5 ">
              {
-      claimList.map(c=><li key={"convsid-"+c.key} >
-        <a className="block py-4 px-4 border-y-[1px] border-slate-300"  onClick={(e)=>{ router.push(`/conversations/${c.key}`)}}>
+      claimList.map(c=><li key={"convsid-"+c.claimId} >
+        <a className="block py-4 px-4 border-y-[1px] border-slate-300"  onClick={(e)=>{ router.push(`/conversations/${c.claimId}`)}}>
                 <div className="flex items-center space-x-4">                    
                     <div className="flex-1 flex justify-between min-w-0">
                         <p className="text-sm font-medium text-gray-900 truncate dark:text-white">
-                        {c.key} 
+                        {c.claimId} 
                         </p> 
 
                         <p>

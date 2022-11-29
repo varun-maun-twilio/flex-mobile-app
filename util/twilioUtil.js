@@ -1,24 +1,45 @@
-const { Client: ConversationsClient } = require("@twilio/conversations");
 
+const { Client: ConversationsClient } = require("@twilio/conversations");
+import BrowserStateUtil from "./browserStateUtil"
 const endpoint = process.env.NEXT_PUBLIC_TWILIO_SERVERLESS;
+
+
+
 
 module.exports = {
 
 
 
-     fetchWorkerDetails :  async (emailId) =>{
+     fetchWorkerDetails :  async () =>{
 
-       return await fetch(`${endpoint}/features/mobile-app/getMobileAppConversationToken`,
+       return await fetch(`${endpoint}/conversation/getTwilioToken`,
             {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization':`Bearer ${await BrowserStateUtil.getAzureAccessToken()}`
                 },
-                body: JSON.stringify({ emailId })
+                body: JSON.stringify({  })
             }).then(d=>d.json()).then(d=>d.data);
 
 
     },
+
+
+    updateWorkerToken :  async (fcmToken) =>{
+
+        return await fetch(`${endpoint}/notfications/updateToken`,
+             {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                     'Authorization':`Bearer ${await BrowserStateUtil.getAzureAccessToken()}`
+                 },
+                 body: JSON.stringify({fcmToken  })
+             }).then(d=>d.json()).then(d=>d.data);
+ 
+ 
+     },
 
     getConversationClient: async (workerToken) => {
        

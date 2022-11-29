@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router'
 
-
+import { signOut as nextSignOut } from "next-auth/react"
 import { removeUserDetails } from '../../util/browserStateUtil';
 import BottomMenu from '../../components/BottomMenu';
 
@@ -10,6 +10,8 @@ export default function Account() {
 
 
   async function signOut(){
+   
+    await nextSignOut({callbackUrl: "/flex-mobile-app/api/auth/logout", });
     await removeUserDetails();
     router.push('/');
   }

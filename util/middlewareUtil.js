@@ -1,16 +1,18 @@
+import BrowserStateUtil from "./browserStateUtil"
 const endpoint = process.env.NEXT_PUBLIC_TWILIO_SERVERLESS;
 
 module.exports = {
 
-    fetchClaims: async (workerSid) =>{
+    fetchClaims: async (searchText) =>{
 
-        return fetch(`${endpoint}/features/conversation/fetchConversationList`,
+        return fetch(`${endpoint}/conversation/search `,
              {
                  method: 'POST',
                  headers: {
-                     'Content-Type': 'application/json'
+                     'Content-Type': 'application/json',
+                     'Authorization':`Bearer ${await BrowserStateUtil.getAzureAccessToken()}`
                  },
-                 body: JSON.stringify({ workerSid })
+                 body: JSON.stringify({  })
              }).then(d=>d.json()).then(d=>d.data);
  
  

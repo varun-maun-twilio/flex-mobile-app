@@ -18,6 +18,27 @@ firebase.initializeApp(FIREBASE_CONFIG);
 const messaging = firebase.messaging();
 
 
+self.addEventListener('notificationclick', function(event) {
+  let url = event.notification.data.url;
+  //event.notification.close(); // Android needs explicit close.
+  event.waitUntil(
+      clients.matchAll({type: 'window', includeUncontrolled: true,}).then( windowClients => {
+          // Check if there is already a window/tab open with the target URL
+          for (var i = 0; i < windowClients.length; i++) {
+              var client = windowClients[i];
+              // If so, just focus it.
+              if (client.url === url && 'focus' in client) {
+                  return client.focus();
+              }
+          }
+          // If not, then open the target URL in a new window/tab.
+          if (clients.openWindow) {
+              return clients.openWindow(url);
+          }
+      })
+  );
+});
+
 messaging.onBackgroundMessage(function(payload) {
   
 
@@ -25,9 +46,13 @@ messaging.onBackgroundMessage(function(payload) {
 
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body: payload.notification.body,  
+    body: payload.notification.body,
+    data:{
+      url:payload.data.url
+    }  
   };
 
-  return self.registration.showNotification(notificationTitle,
+  return self.registration.showNotification('Background:'+notificationTitle,
     notificationOptions);
 });
+
