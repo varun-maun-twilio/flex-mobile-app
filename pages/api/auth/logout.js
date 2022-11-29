@@ -1,1 +1,1 @@
-export default (req, res) => { res.redirect('/flex-mobile-app'); }
+export default (req, res) => { res.redirect('/'); }

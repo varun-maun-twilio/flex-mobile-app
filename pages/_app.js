@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, }) {
 
       </Head>
       <ToastContainer />
-      <SessionProvider session={session}  basePath="/flex-mobile-app/api/auth" >
+      <SessionProvider session={session}  >
       <Component {...pageProps} />
       </SessionProvider>
     </div>

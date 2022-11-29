@@ -11,7 +11,7 @@ export default function Account() {
 
   async function signOut(){
    
-    await nextSignOut({callbackUrl: "/flex-mobile-app/api/auth/logout", });
+    await nextSignOut({callbackUrl: "/api/auth/logout", });
     await removeUserDetails();
     router.push('/');
   }
