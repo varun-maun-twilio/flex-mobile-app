@@ -52,7 +52,7 @@ messaging.onBackgroundMessage(function(payload) {
     }  
   };
 
-  return self.registration.showNotification('Background:'+notificationTitle,
+  return self.registration.showNotification(notificationTitle,
     notificationOptions);
 });
 
