@@ -29,7 +29,7 @@ useEffect(()=>{
       conversation.removeAllListeners();
     }
   }
-},[])
+},[claimId])
 
 
 useEffect(()=>{
