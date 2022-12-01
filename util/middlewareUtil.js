@@ -1,5 +1,6 @@
 import BrowserStateUtil from "./browserStateUtil"
 const endpoint = process.env.NEXT_PUBLIC_TWILIO_SERVERLESS;
+const taskEndpoint = process.env.NEXT_PUBLIC_TWILIO_SERVERLESS_TASKS;
 
 module.exports = {
 
@@ -20,7 +21,7 @@ module.exports = {
      initializeTask: async (claimId,agentEmailId) => {
         
 
-        return fetch(`${endpoint}/features/conversation/initiateOutbound`,
+        return fetch(`${taskEndpoint}/features/conversation/initiateOutbound`,
              {
                  method: 'POST',
                  headers: {
@@ -30,7 +31,7 @@ module.exports = {
              }).then(d=>d.json()).then(d=>d.data);
      },
      endTask: async (claimId) => {
-        return fetch(`${endpoint}/features/conversation/parkInteraction`,
+        return fetch(`${taskEndpoint}/features/conversation/parkInteraction`,
         {
             method: 'POST',
             headers: {
