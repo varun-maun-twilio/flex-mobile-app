@@ -34,7 +34,7 @@ const firebaseCloudMessaging = {
         if (status && status === "granted") {
         
         // Get new token from Firebase
-        const swRegistration = await navigator.serviceWorker.register('/flex-mobile-app/firebase-messaging-sw.js');
+        const swRegistration = await navigator.serviceWorker.register('/firebase-messaging-sw.js');
 
           const fcm_token = await getToken( messaging,{
             vapidKey: "BFNbcMkxwd_gSV_cnz_zklEWZsWjSwrEP63gPqjNaVOMwF2fCc3QVYpGrq2XFUrH3p605FAN5cYdUNN2GgOU6bA",
