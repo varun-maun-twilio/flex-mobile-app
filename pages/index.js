@@ -100,7 +100,7 @@ async function  loginUser(){
   }
 
 
-
+try{
  
   const userDetails = await TwilioUtil.fetchWorkerDetails();
   await setToken();
@@ -109,6 +109,9 @@ async function  loginUser(){
   window.conversationClient = await TwilioUtil.getConversationClient(userDetails.token);
   setShowLoading(false);
   router.push('/conversations')
+}catch(e){
+  toast.error('Unable to sign you in. Please contact Admin')
+}
 
 
 }
