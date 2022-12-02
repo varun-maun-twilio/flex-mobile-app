@@ -37,7 +37,7 @@ export default function CannedResponses({updateText}){
 
 
     return (
-        <div className="flex justify-center">
+        <div className="flex justify-center h-12 w-12 overflow-hidden">
   <div>
     <div className="dropup relative">
       
