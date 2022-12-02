@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import {HiChevronUp, HiChevronDown} from "react-icons/hi";
 import MiddlewareUtil from "../util/middlewareUtil";
-export default function({updateText}){
+export default function CannedResponses({updateText}){
 
 
     const [isModalOpen,setIsModalOpen] = useState(false);
