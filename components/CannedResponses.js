@@ -98,14 +98,16 @@ style={{bottom:60}}
            
            {cannedMessageGroups &&
            cannedMessageGroups.map(g=>(
-               <div className="p-4 border rounded my-2">
+               <div className="p-4 border rounded my-2" key={`canned-grp-${g.section}`}>
                <h5 className="text-l font-semibold text-gray-900 dark:text-white">
                    {g.section}
                </h5>
                <ul>
                {
-                   (g.questions || []).map(q=>(
-                       <li><a onClick={()=>{
+                   (g.questions || []).map((q,qIter)=>(
+                       <li
+                       key={`canned-grp-${g.section}-${qIter}`}
+                       ><a onClick={()=>{
                         updateText(q.text);
                         setIsModalOpen(false);
                        }}  className="block p-2 my-3 text-gray-500 dark:text-gray-400 underline">{q.text}</a></li>
