@@ -4,6 +4,7 @@ import BrowserStateUtil from "../../../util/browserStateUtil"
 import TwilioUtil from "../../../util/twilioUtil";
 import MiddlewareUtil from "../../../util/middlewareUtil";
 import {HiChevronLeft} from "react-icons/hi";
+import CannedResponses from '../../../components/CannedResponses';
 import moment from 'moment'
 
 
@@ -145,6 +146,7 @@ function sendMessage(){
         </div>
      
         <div className="flex w-full">
+          <CannedResponses updateText={setNewMessage} />
         <input
       type="text"
       value={newMessage}

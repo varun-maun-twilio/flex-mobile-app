@@ -39,6 +39,9 @@ module.exports = {
             },
             body: JSON.stringify({claimId  })
         }).then(d=>d.json()).then(d=>d.data);
+     },
+     getCannedResponses : async()=>{
+         return fetch(`https://demo-chat-responses-7553-dev.twil.io/chat-responses`).then(d=>d.json()).then(d=>d.data);
      }
 
 }
