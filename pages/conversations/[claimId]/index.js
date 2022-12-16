@@ -3,8 +3,10 @@ import { useEffect, useState, useRef } from "react";
 import BrowserStateUtil from "../../../util/browserStateUtil"
 import TwilioUtil from "../../../util/twilioUtil";
 import MiddlewareUtil from "../../../util/middlewareUtil";
-import {HiChevronLeft} from "react-icons/hi";
-import CannedResponses from '../../../components/CannedResponses';
+import {HiChevronLeft,HiOutlineTranslate} from "react-icons/hi";
+import InputHelpers from './InputHelpers';
+import {HiOutlineDocumentText,HiChevronUp, HiChevronDown} from "react-icons/hi";
+
 import moment from 'moment'
 
 
@@ -20,10 +22,16 @@ const [messageList,setMessageList] = useState([]);
 const messagesEndRef = useRef(null)
 
 const [newMessage,setNewMessage] = useState("");
+const [newMessageTranslated,setNewMessageTranslated] = useState(null);
 const [userId,setUserId] = useState(null);
 
+const [areHelpersVisible,setAreHelpersVisible] = useState(false);
+const toggleHelpersVisibility=()=>{
+  setAreHelpersVisible(old=>!old);
+}
+
 useEffect(()=>{
-  scrollToBottom();
+  
   loadMessages();
   return ()=>{
     if(conversation!=null){
@@ -34,7 +42,8 @@ useEffect(()=>{
 
 
 useEffect(()=>{
-  //Do nothing
+  scrollToBottom();
+  console.error({messageList});
 },[messageList,conversation])
 
 async function closeChatWindow(){
@@ -49,7 +58,7 @@ async function  loadMessages(){
 
   if(claimId!=null){
 
-    console.error('claimId',claimId);
+   
     const userDetails  = await BrowserStateUtil.fetchUserDetails();
   console.error({userDetails});
   setUserId(userDetails.identity);
@@ -64,6 +73,7 @@ async function  loadMessages(){
   const conv = await conversationClient.getConversationByUniqueName(claimId);
   conv.setAllMessagesRead();
   conv.removeAllListeners();
+  conv.on('messageUpdated',m=>{const newMsg = m.message; setMessageList(old=>old.map(o=>(o.sid==newMsg.sid)?newMsg:o)); })
   conv.on('messageAdded', m => { console.error('Executing adding messages',m); setMessageList(old=>[...old,m])});
   setConversation(conv);
   //3. Load messages 
@@ -101,9 +111,19 @@ function handleNewMessageChange(e){
 }
 
 function sendMessage(){
-  conversation.sendMessage(newMessage);
+
+  let suffix = "";
+  if(areHelpersVisible && newMessageTranslated){
+      suffix=`\n\n--\n\n${newMessageTranslated}\n\n--\n\nTranslated by Microsoft Azure`;
+  }
+
+  
+  conversation.sendMessage(newMessage+suffix);
   setNewMessage("");
 }
+
+
+
 
   return (
     
@@ -133,7 +153,17 @@ function sendMessage(){
             {messageList.map(m=>(
             <li key={m.sid} className={"flex flex-col my-4 "}>
                 
-                <div className={"inline-flex relative px-4 py-2 text-gray-700 rounded shadow "+((amITheAuthor(m.author))?" self-end bg-sky-100":" self-start bg-neutral-100 ")}>{m.body}</div>           
+                <div className={"inline-flex relative px-4 py-2 text-gray-700 rounded shadow "+((amITheAuthor(m.author))?" self-end bg-sky-100":" self-start bg-neutral-100 ")}>
+                  {m.body}    
+                </div>    
+                {
+                (m.attributes?.translations?.en) && 
+                <div className={"inline-flex relative px-4 py-2 text-gray-700 rounded shadow self-start bg-neutral-300 "} >
+                
+                <HiOutlineTranslate size={20} className="mr-4" />
+                {m.attributes?.translations?.en}
+                  </div>
+                }        
                 <div className={"mt-1 text-xs "+((amITheAuthor(m.author))?"self-end":"self-start")}>{moment(m.dateCreated).format("MM/DD/YYYY, h:mm:ss a")}</div>       
                 
                 
@@ -145,8 +175,43 @@ function sendMessage(){
         <div ref={messagesEndRef} />
         </div>
      
-        <div className="flex w-full">
-          <CannedResponses updateText={setNewMessage} />
+       
+          <div className="flex w-full"> 
+
+          <button
+        className="
+          dropdown-toggle
+          px-1
+          py-1
+          bg-blue-600
+          text-white
+          font-medium
+          text-xs
+          leading-tight
+          uppercase
+          rounded
+          shadow-md
+          hover:bg-blue-700 hover:shadow-lg
+          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
+          active:bg-blue-800 active:shadow-lg active:text-white
+          transition
+          duration-150
+          ease-in-out
+          flex
+          items-center
+          whitespace-nowrap
+        "
+        type="button"
+        onClick={toggleHelpersVisibility}
+
+
+      >
+          {
+              areHelpersVisible? <HiChevronDown size={30} />: <HiChevronUp  size={30}  />
+          }
+          
+      </button>
+
         <input
       type="text"
       value={newMessage}
@@ -178,11 +243,21 @@ function sendMessage(){
         </div>
  
      
- 
+      
+          {
+            areHelpersVisible && 
+            <div className="flex w-full  h-1/3">
+            <InputHelpers newMessage={newMessage}  setNewMessage={setNewMessage} setNewMessageTranslated={setNewMessageTranslated} />
+            </div>
+          }
+
+        
+         
+         
      
 
-
-    
+      
+   
 
     
  

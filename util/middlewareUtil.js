@@ -42,6 +42,15 @@ module.exports = {
      },
      getCannedResponses : async()=>{
          return fetch(`https://demo-chat-responses-7553-dev.twil.io/chat-responses`).then(d=>d.json()).then(d=>d.data);
-     }
+     },
+     translateText : async(languageCode,originalText)=>{
+        return fetch(`https://demo-data-9677.twil.io/translate`,{
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({languageCode,originalText}),
+        }).then(d=>d.json());
+    }
 
 }
