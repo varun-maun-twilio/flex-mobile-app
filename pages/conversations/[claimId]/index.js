@@ -205,7 +205,7 @@ if(showError){
                   {
                     (m.attributes?.translations?.en) && 
                      <>
-                     --<br/>
+                     <br/>--<br/>
                      {m.attributes?.translations?.en}<br/>
                      --<br/>
                      Translated to {languageMap['en']} by Microsoft Azure
