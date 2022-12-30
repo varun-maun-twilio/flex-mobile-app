@@ -6,7 +6,7 @@ import MiddlewareUtil from "../../../util/middlewareUtil";
 import {HiChevronLeft,HiOutlineTranslate} from "react-icons/hi";
 import InputHelpers from './InputHelpers';
 import {HiOutlineDocumentText,HiChevronUp, HiChevronDown} from "react-icons/hi";
-
+import { languageMap } from '../../../config/languageMap';
 import moment from 'moment'
 
 
@@ -17,6 +17,7 @@ export default function Conversation() {
  const [conversation,setConversation] = useState(null); 
  
 const [showLoading,setShowLoading] = useState(true);  
+const [showError,setShowError] = useState(false);  
 
 const [messageList,setMessageList] = useState([]);
 const messagesEndRef = useRef(null)
@@ -43,7 +44,6 @@ useEffect(()=>{
 
 useEffect(()=>{
   scrollToBottom();
-  console.error({messageList});
 },[messageList,conversation])
 
 async function closeChatWindow(){
@@ -52,6 +52,38 @@ async function closeChatWindow(){
 }
 
 
+
+async function initalizeConversation(token,claimId){
+
+  const max = 5;
+  const ms = 1000;
+  let clnt,err1,conv,err2;
+
+  for(let iter=0;iter<max;iter++){
+    try{
+    [clnt,err1] = await TwilioUtil.getConversationClient(token).then(d=>[d,null]).catch(e=>[null,e]);
+    }catch(e){
+      err1=e;
+    }
+    console.error({clientError:err1});
+    if(err1==null){
+      try{
+      [conv,err2]  = await clnt.getConversationByUniqueName(claimId).then(d=>[d,null]).catch(e=>[null,e]);
+    }catch(e){
+      err2=e;
+    }
+
+    if(err2==null){
+
+      return conv;
+    }
+    }
+   await new Promise(resolve => setTimeout(resolve, ms));
+  }
+  setShowError(true);
+
+
+}
 
 async function  loadMessages(){
   setShowLoading(true);
@@ -68,14 +100,22 @@ async function  loadMessages(){
   await MiddlewareUtil.initializeTask(claimId,userDetails.emailId);
 
   //2. Initialize Conversation
- 
-  const conversationClient = await TwilioUtil.getConversationClient(userDetails.token);
-  const conv = await conversationClient.getConversationByUniqueName(claimId);
+  
+  
+
+  const conv = await initalizeConversation(userDetails.token,claimId);
+
+if(conv!=null){
+
+
   conv.setAllMessagesRead();
   conv.removeAllListeners();
   conv.on('messageUpdated',m=>{const newMsg = m.message; setMessageList(old=>old.map(o=>(o.sid==newMsg.sid)?newMsg:o)); })
   conv.on('messageAdded', m => { console.error('Executing adding messages',m); setMessageList(old=>[...old,m])});
   setConversation(conv);
+
+
+ 
   //3. Load messages 
   conv.getMessages(1000).then(messagePaginator => {  
     setMessageList(messagePaginator.items.map(s=>{return {
@@ -89,6 +129,7 @@ type:s.type
   
 })
 }
+  }
 
   setShowLoading(false);
 }
@@ -118,11 +159,17 @@ function sendMessage(){
   }
 
   
-  conversation.sendMessage(newMessage+suffix);
+  conversation.sendMessage(newMessage+suffix,{source: "adjuster"});
   setNewMessage("");
 }
 
 
+
+if(showError){
+  return (    <div className="flex flex-col min-h-full " style={ {maxHeight: "-webkit-fill-available"}}>
+    <h2>Error Please Retry</h2>
+  </div>)
+}
 
 
   return (
@@ -139,10 +186,10 @@ function sendMessage(){
             </nav>
 
 
-      <div class="animate-pulse duration-300 flex space-x-4 h-4 justify-end">
+      <div className="animate-pulse duration-300 flex space-x-4 h-4 justify-end">
       {
       showLoading && 
-      <span class="animate-pulse inline-flex h-4 w-4 rounded-full  bg-rose-600 opacity-100"></span>
+      <span className="animate-pulse inline-flex h-4 w-4 rounded-full  bg-rose-600 opacity-100"></span>
       }
       </div>
 
@@ -154,16 +201,18 @@ function sendMessage(){
             <li key={m.sid} className={"flex flex-col my-4 "}>
                 
                 <div className={"inline-flex relative px-4 py-2 text-gray-700 rounded shadow "+((amITheAuthor(m.author))?" self-end bg-sky-100":" self-start bg-neutral-100 ")}>
-                  {m.body}    
+                  {m.body} 
+                  {
+                    (m.attributes?.translations?.en) && 
+                     <>
+                     --<br/>
+                     {m.attributes?.translations?.en}<br/>
+                     --<br/>
+                     Translated to {languageMap['en']} by Microsoft Azure
+                   </>
+                  }   
                 </div>    
-                {
-                (m.attributes?.translations?.en) && 
-                <div className={"inline-flex relative px-4 py-2 text-gray-700 rounded shadow self-start bg-neutral-300 "} >
-                
-                <HiOutlineTranslate size={20} className="mr-4" />
-                {m.attributes?.translations?.en}
-                  </div>
-                }        
+                    
                 <div className={"mt-1 text-xs "+((amITheAuthor(m.author))?"self-end":"self-start")}>{moment(m.dateCreated).format("MM/DD/YYYY, h:mm:ss a")}</div>       
                 
                 
