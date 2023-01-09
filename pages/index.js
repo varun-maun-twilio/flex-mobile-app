@@ -152,7 +152,7 @@ try{
     
     <div className="">
     
-      <button className="h-20 w-full block align-middle mx-auto shadow bg-rose-600  focus:shadow-outline focus:outline-none disabled:opacity-25 text-white text-l py-3 px-10 font-bold"
+      <button className="h-20 w-full block align-middle mx-auto shadow bg-flex-blue  focus:shadow-outline focus:outline-none disabled:opacity-25 text-white text-l py-3 px-10 font-bold"
       onClick={()=>{
         signIn();
       }}

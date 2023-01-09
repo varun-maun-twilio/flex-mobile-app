@@ -17,17 +17,17 @@ export default function BottomMenu({activeScreen}){
     
 
     return (
-        <div className="w-full">
+        <div className="w-full h-16 ">
 	
-	<section id="bottom-navigation" className="block fixed inset-x-0 bottom-0 z-10 bg-white shadow">
-		<div id="tabs" className="flex justify-between">
-			<a onClick={e=>handleClick(e,'/conversations')} className={"w-full justify-center inline-block text-center pt-2 pb-1 "+((activeScreen=="/conversations")?" text-red-500 ":"")}>
+	<section id="bottom-navigation" className="block h-16 fixed inset-x-0 bottom-0 z-10 bg-gray-50 shadow">
+		<div id="tabs" className="flex  h-14 justify-between rounded-3xl overflow-hidden border-[1px] border-gray-300 mb-2">
+			<a onClick={e=>handleClick(e,'/conversations')} className={"w-full justify-center inline-flex flex-col text-center pt-2 pb-1 "+((activeScreen=="/conversations")?" text-white bg-flex-blue ":"text-gray-400 bg-white")}>
                 <HiChatAlt2 size={20} className="m-auto" />
-				<span className="tab tab-home block text-xs">Conversations</span>
+				<span className="tab tab-home block text-sm">Conversations</span>
 			</a>			
-			<a  onClick={e=>handleClick(e,'/account')}  className={"w-full justify-center inline-block text-center pt-2 pb-1 "+((activeScreen=="/account")?" text-red-500 ":"")}>
+			<a  onClick={e=>handleClick(e,'/account')}  className={"w-full justify-center inline-flex flex-col text-center pt-2 pb-1 "+((activeScreen=="/account")?" text-white bg-flex-blue ":"text-gray-400  bg-white")}>
                 <HiUserCircle size={20} className="m-auto" />				
-				<span className="tab tab-account block text-xs">Account</span>
+				<span className="tab tab-account block text-sm">Account</span>
 			</a>
 		</div>
 	</section>

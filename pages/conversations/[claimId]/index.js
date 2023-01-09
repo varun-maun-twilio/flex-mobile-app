@@ -5,7 +5,9 @@ import TwilioUtil from "../../../util/twilioUtil";
 import MiddlewareUtil from "../../../util/middlewareUtil";
 import {HiChevronLeft,HiOutlineTranslate} from "react-icons/hi";
 import InputHelpers from './InputHelpers';
+import Loader from '../../../components/Loader';
 import {HiOutlineDocumentText,HiChevronUp, HiChevronDown} from "react-icons/hi";
+import { signOut as nextSignOut } from "next-auth/react"
 import { languageMap } from '../../../config/languageMap';
 import moment from 'moment'
 
@@ -50,6 +52,14 @@ async function closeChatWindow(){
   await MiddlewareUtil.endTask(claimId);
   router.push('/conversations')
 }
+
+async function signOut(){
+   
+  await nextSignOut({callbackUrl: "/api/auth/logout", });
+  await BrowserStateUtil.removeUserDetails();
+  router.push('/');
+}
+
 
 
 
@@ -166,8 +176,21 @@ function sendMessage(){
 
 
 if(showError){
-  return (    <div className="flex flex-col min-h-full " style={ {maxHeight: "-webkit-fill-available"}}>
-    <h2>Error Please Retry</h2>
+  return (   <div className="flex flex-col min-h-full bg-gray-50" style={ {maxHeight: "-webkit-fill-available"}}>
+   
+   <section className="flex items-center h-full sm:p-16 dark:bg-gray-900 dark:text-gray-100">
+	<div className="container flex flex-col items-center justify-center px-5 mx-auto my-8 space-y-8 text-center sm:max-w-md">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-40 h-40 dark:text-gray-600">
+			<path fill="currentColor" d="M256,16C123.452,16,16,123.452,16,256S123.452,496,256,496,496,388.548,496,256,388.548,16,256,16ZM403.078,403.078a207.253,207.253,0,1,1,44.589-66.125A207.332,207.332,0,0,1,403.078,403.078Z"></path>
+			<rect width="176" height="32" x="168" y="320" fill="currentColor"></rect>
+			<polygon fill="currentColor" points="210.63 228.042 186.588 206.671 207.958 182.63 184.042 161.37 162.671 185.412 138.63 164.042 117.37 187.958 141.412 209.329 120.042 233.37 143.958 254.63 165.329 230.588 189.37 251.958 210.63 228.042"></polygon>
+			<polygon fill="currentColor" points="383.958 182.63 360.042 161.37 338.671 185.412 314.63 164.042 293.37 187.958 317.412 209.329 296.042 233.37 319.958 254.63 341.329 230.588 365.37 251.958 386.63 228.042 362.588 206.671 383.958 182.63"></polygon>
+		</svg>
+		<p className="text-3xl">Your session has expired</p>
+		<a rel="noopener noreferrer" onClick={signOut} className="px-8 py-3 font-semibold rounded dark:bg-violet-400 dark:text-gray-900">Go to login page</a>
+	</div>
+</section>
+
   </div>)
 }
 
@@ -176,20 +199,20 @@ if(showError){
     
      
 
-    <div className="flex flex-col min-h-full " style={ {maxHeight: "-webkit-fill-available"}}>
+    <div className="flex flex-col min-h-full bg-gray-50" style={ {maxHeight: "-webkit-fill-available"}}>
 
 
 
-    <nav className="p-4 shadow border-b-1 border-slate-500 flex justify-between items-center">
-            <a onClick={()=>closeChatWindow()}>   <HiChevronLeft size={50} className="" /></a>
-            <span>{claimId}</span>
+    <nav className="p-4 shadow bg-flex-blue flex justify-between items-center">
+            <a onClick={()=>closeChatWindow()}>   <HiChevronLeft color={"#fff"}  size={50} className="" /></a>
+            <span className="text-xl leading-normal font-bold text-white">{claimId}</span>
             </nav>
 
 
-      <div className="animate-pulse duration-300 flex space-x-4 h-4 justify-end">
+    <div className="">
       {
       showLoading && 
-      <span className="animate-pulse inline-flex h-4 w-4 rounded-full  bg-rose-600 opacity-100"></span>
+      <Loader />
       }
       </div>
 

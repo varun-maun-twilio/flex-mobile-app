@@ -1,12 +1,12 @@
 import BrowserStateUtil from "./browserStateUtil"
 const endpoint = process.env.NEXT_PUBLIC_TWILIO_SERVERLESS;
 const taskEndpoint = process.env.NEXT_PUBLIC_TWILIO_SERVERLESS_TASKS;
-
+const middlewareEndpoint = process.env.NEXT_PUBLIC_TWILIO_SERVERLESS_MIDDLEWARE;
 module.exports = {
 
     fetchClaims: async (searchText) =>{
 
-        return fetch(`${endpoint}/conversation/search `,
+        return fetch(`${endpoint}/conversation/search`,
              {
                  method: 'POST',
                  headers: {
@@ -17,8 +17,21 @@ module.exports = {
              }).then(d=>d.json()).then(d=>d.data);
  
  
+     },
+     searchClaims: async (searchText) =>{
+
+        return fetch(`${middlewareEndpoint}/claim/search`,
+             {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify({ claimId:searchText })
+             }).then(d=>d.json()).then(d=>d.data);
+ 
+ 
      }, 
-     initializeTask: async (claimId,agentEmailId) => {
+     initializeTask: async (claimId,agentEmailId,customerPhone) => {
         
 
         return fetch(`${taskEndpoint}/features/conversation/initiateOutbound`,
@@ -27,7 +40,7 @@ module.exports = {
                  headers: {
                      'Content-Type': 'application/json'
                  },
-                 body: JSON.stringify({claimId,agentEmailId  })
+                 body: JSON.stringify({claimId,agentEmailId,customerPhone  })
              }).then(d=>d.json()).then(d=>d.data);
      },
      endTask: async (claimId) => {
