@@ -2,8 +2,8 @@ import { useEffect, useState, useRef } from "react";
 import {HiOutlineTranslate} from "react-icons/hi";
 import CannedResponses from '../../../components/CannedResponses';
 import TranslationMenu from '../../../components/TranslationMenu'
-import {DebounceInput} from 'react-debounce-input';
-export default function InputHelpers({newMessage,setNewMessage,setNewMessageTranslated}) {
+
+export default function InputHelpers({newMessage,setNewMessage,setNewMessageTranslated,conversationAttributes}) {
     const [showTranslationPreview,setShowTranslationPreview] = useState(false);
 
     const [translatedTextPreview,setTranslatedTextPreview] = useState("");
@@ -15,7 +15,11 @@ export default function InputHelpers({newMessage,setNewMessage,setNewMessageTran
     const toggleTranslationPreview=()=>{
         setShowTranslationPreview(old=>!old);
       }
+      
+      useEffect(()=>{
+     
 
+    },[conversationAttributes]);
 
 
      return (
@@ -27,7 +31,7 @@ export default function InputHelpers({newMessage,setNewMessage,setNewMessageTran
 
         {
             menuItems.map(mi=>(mi==selectedMenuItem)?
-            <li className="mr-2">
+            <li key={`label-input-helper-${mi}`} className="mr-2">
             <a  className="inline-block p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 active dark:text-blue-500 dark:border-blue-500" aria-current="page">
                 {mi}
             </a>
@@ -48,7 +52,7 @@ export default function InputHelpers({newMessage,setNewMessage,setNewMessageTran
 
 {
     selectedMenuItem=="Autoreplies" &&
-    <CannedResponses updateText={setNewMessage} />
+    <CannedResponses updateText={setNewMessage} conversationAttributes={conversationAttributes} />
 
 }
 

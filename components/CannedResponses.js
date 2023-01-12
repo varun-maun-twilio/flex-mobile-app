@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { Liquid } from 'liquidjs'
+const engine = new Liquid()
 import MiddlewareUtil from "../util/middlewareUtil";
-export default function CannedResponses({updateText}){
+export default function CannedResponses({updateText,conversationAttributes}){
 
 
     const [cannedMessageGroups,setCannedMessageGroups] = useState([]);
@@ -9,11 +11,30 @@ export default function CannedResponses({updateText}){
     useEffect(()=>{
         loadCannedResponses();
 
-    },[]);
+    },[conversationAttributes]);
 
 
     
+    const applyLiquidTemplating = (cannedResponseGroups)=>{
+        const templatePayload = conversationAttributes || {};
 
+        return cannedResponseGroups.map(x=>{
+            try{
+                const newX = {...x};
+                newX.questions = newX.questions.map(q=> {
+                    const newQ = {...q};
+                    newQ.text = engine.parseAndRenderSync(q.text,templatePayload);
+                    return newQ;
+                });
+                return newX;
+
+            }catch(e){
+             return x;   
+            }
+        });
+
+        
+    }
 
 
     const loadCannedResponses= async ()=>{
@@ -21,8 +42,8 @@ export default function CannedResponses({updateText}){
 
      
             const cannedResponses = await MiddlewareUtil.getCannedResponses();
-
-            setCannedMessageGroups(cannedResponses);
+            const templatedResponses = applyLiquidTemplating(cannedResponses);
+            setCannedMessageGroups(templatedResponses);
         }catch(e){
             console.error(e);
         }

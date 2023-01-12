@@ -36,7 +36,7 @@ export default function TranslationMenu({originalText,setNewMessageTranslated}){
 <div className="flex-none text-sm font-medium">
   <div className="flex  h-14  justify-between items-center">
   <div className="flex-none  mr-4 ">
-  <label for="languages" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language:</label>
+  <label htmlFor="languages" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Language:</label>
   </div>
   <div className="flex-1 ">
   

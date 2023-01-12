@@ -114,6 +114,7 @@ async function  loadMessages(){
   
 
   const conv = await initalizeConversation(userDetails.token,claimId);
+  console.error({conv});
 
 if(conv!=null){
 
@@ -319,7 +320,13 @@ if(showError){
           {
             areHelpersVisible && 
             <div className="flex w-full  h-1/3">
-            <InputHelpers newMessage={newMessage}  setNewMessage={setNewMessage} setNewMessageTranslated={setNewMessageTranslated} />
+            <InputHelpers
+            key={`input-helpers-${claimId}`}
+            newMessage={newMessage}  
+                          setNewMessage={setNewMessage} 
+                          setNewMessageTranslated={setNewMessageTranslated}
+                          conversationAttributes={conversation.attributes}
+                          />
             </div>
           }
 
