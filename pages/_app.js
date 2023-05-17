@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, }) {
 <link rel="apple-touch-startup-image" href="https://www.twilio.com/content/dam/twilio-com/core-assets/social/apple-touch-icon.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="https://www.twilio.com/content/dam/twilio-com/core-assets/social/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="72x72" href="https://www.twilio.com/content/dam/twilio-com/core-assets/social/favicon-32x32.png" />
-      <link rel="icon" type="image/png" sizes="114x114" href="https://www.twilio.com/content/dam/twilio-com/core-assets/social/favicon-16x16.png">
+      <link rel="icon" type="image/png" sizes="114x114" href="https://www.twilio.com/content/dam/twilio-com/core-assets/social/favicon-16x16.png" />
          
       </Head>
       <ToastContainer />
